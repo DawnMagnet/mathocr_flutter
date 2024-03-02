@@ -1,0 +1,74 @@
+name: Flutter Build and Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "2.x"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android APK
+        run: flutter build apk
+
+      - name: Build iOS app
+        run: flutter build ios --release --no-codesign
+
+      - name: Build macOS app
+        run: flutter build macos
+
+      - name: Build Windows app
+        run: flutter build windows
+
+      - name: Build web app
+        run: flutter build web
+
+      - name: Build Linux app
+        run: flutter build linux
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-artifacts
+          path: |
+            build/app/outputs/apk/release/
+            build/ios/iphoneos/Runner.app
+            build/macos/Build/Products/Release/Runner.app
+            build/windows/runner/Release/
+            build/web/
+
+  release:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: release-artifacts
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/apk/release/*.apk
+            build/ios/iphoneos/Runner.app
+            build/macos/Build/Products/Release/Runner.app
+            build/windows/runner/Release/*.exe
+            build/web/
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
