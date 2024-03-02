@@ -23,6 +23,11 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
 
+      - name: "Install dependencies"
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build build-essential pkg-config curl file git unzip xz-utils zip libgtk-3-dev
+
       - name: Flutter Pub Get
         run: flutter pub get
 
@@ -34,6 +39,12 @@ jobs:
 
       - name: Build Linux app
         run: flutter build linux
+      
+      - name: Build AppImage unsing appimage-builder
+        uses: docker://appimagecrafters/appimage-builder:0.8.5
+        with:
+          entrypoint: appimage-builder
+          args: --recipe ./AppImageBuilder.yml --skip-test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -41,8 +52,9 @@ jobs:
           name: release-artifacts
           path: |
             build/app/outputs/apk/release/
-            build/windows/runner/Release/
+            
             build/web/
+            ./*.AppImage*
 
   release-on-ubuntu:
     needs: build-and-release-on-ubuntu
@@ -55,12 +67,16 @@ jobs:
           name: release-artifacts
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
           files: |
             build/app/outputs/apk/release/*.apk
-            build/windows/runner/Release/*.exe
             build/web/
+            ./*.AppImage*
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -102,3 +118,47 @@ jobs:
         with:
           channel: "stable"
       - run: flutter build windows
+  release-on-macos:
+    needs: build-and-release-on-macos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: release-artifacts
+
+      - name: Create release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: |
+            build/windows/runner/Release/*.exe
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-on-windows:
+    needs: build-and-release-on-windows
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: release-artifacts
+
+      - name: Create release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: |
+            build/windows/runner/Release/*.exe
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
