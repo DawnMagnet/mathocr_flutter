@@ -23,10 +23,10 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
 
-      - name: "Install dependencies"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y cmake ninja-build build-essential pkg-config curl file git unzip xz-utils zip libgtk-3-dev
+      # - name: "Install dependencies"
+      #   run: |
+      #     sudo apt-get update -y
+      #     sudo apt-get install -y cmake ninja-build build-essential pkg-config curl file git unzip xz-utils zip libgtk-3-dev
 
       - name: Flutter Pub Get
         run: flutter pub get
@@ -40,11 +40,11 @@ jobs:
       - name: Build Linux app
         run: flutter build linux
 
-      - name: Build AppImage unsing appimage-builder
-        uses: docker://appimagecrafters/appimage-builder:0.8.5
-        with:
-          entrypoint: appimage-builder
-          args: --recipe ./AppImageBuilder.yml --skip-test
+      # - name: Build AppImage unsing appimage-builder
+      #   uses: docker://appimagecrafters/appimage-builder:0.8.5
+      #   with:
+      #     entrypoint: appimage-builder
+      #     args: --recipe ./AppImageBuilder.yml --skip-test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -52,9 +52,8 @@ jobs:
           name: release-artifacts
           path: |
             build/app/outputs/apk/release/
-
             build/web/
-            ./*.AppImage*
+            build/linux/x64/release/bundle/
 
   release-on-ubuntu:
     needs: build-and-release-on-ubuntu
@@ -76,7 +75,7 @@ jobs:
           files: |
             build/app/outputs/apk/release/*.apk
             build/web/
-            ./*.AppImage*
+            build/linux/x64/release/bundle/
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
