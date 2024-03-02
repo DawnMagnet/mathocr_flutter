@@ -51,9 +51,9 @@ jobs:
         with:
           name: release-artifacts
           path: |
-            build/app/outputs/apk/release/
-            build/web/
-            build/linux/x64/release/bundle/
+            build/app/outputs/flutter-apk/*
+            build/web/*
+            build/linux/x64/release/bundle/*
 
   release-on-ubuntu:
     needs: build-and-release-on-ubuntu
@@ -73,9 +73,9 @@ jobs:
           prerelease: false
           title: "Development Build"
           files: |
-            build/app/outputs/apk/release/*.apk
-            build/web/
-            build/linux/x64/release/bundle/
+            build/app/outputs/flutter-apk/*.apk
+            build/web
+            build/linux/x64/release/bundle
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,21 +109,6 @@ jobs:
             build/ios/iphoneos/Runner.app
             build/macos/Build/Products/Release/Runner.app
 
-  build-and-release-on-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-      - run: flutter build windows
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-artifacts
-          path: |
-            build/windows/x64/runner/Release/
   release-on-macos:
     needs: build-and-release-on-macos
     runs-on: ubuntu-latest
@@ -142,7 +127,8 @@ jobs:
           prerelease: false
           title: "Development Build"
           files: |
-            build/windows/x64/runner/Release/*.exe
+            build/ios/iphoneos/Runner.app
+            build/macos/Build/Products/Release/Runner.app
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -164,7 +150,23 @@ jobs:
           prerelease: false
           title: "Development Build"
           files: |
-            build/windows/runner/Release/*.exe
+            build/windows/x64/runner/Release
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-release-on-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - run: flutter build windows
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-artifacts
+          path: |
+            build/windows/x64/runner/Release/*.exe
