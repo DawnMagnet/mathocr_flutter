@@ -1,16 +1,14 @@
-# mathocr_flutter
+# MathOCR-基于 Flutter 开发的新一代数学公式识别软件
 
-A new Flutter project.
+基于 MathOCR 以及 pytorch 开发的数学公式识别软件，基于 Flutter 开发，支持全平台(Windows/Linux/MacOS/Android/IOS/Web)。
 
-## Getting Started
+全免费使用，可以点击[官方网站](https://mathocr.dawnmagnet.xyz)体验
 
-This project is a starting point for a Flutter application.
+## 如何本地编译项目
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/dawnmagnet/mathocr_flutter.git
+cd mathocr_flutter
+flutter pub get
+flutter run -d $(你希望运行的平台，使用flutter devices查看)
+```
