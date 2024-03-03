@@ -148,7 +148,7 @@ jobs:
       #     tar -zcvf android.tar.gz app
       #     tar -zcvf windows.tar.gz Release
 
-      - name: Create release
+      - name: Create releases
         uses: softprops/action-gh-release@v1
         # if: startsWith(github.ref, 'refs/tags/')
         with:
