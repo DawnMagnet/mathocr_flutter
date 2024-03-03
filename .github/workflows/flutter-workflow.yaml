@@ -46,14 +46,19 @@ jobs:
       #     entrypoint: appimage-builder
       #     args: --recipe ./AppImageBuilder.yml --skip-test
 
+      - name: pack into tar.gz or zip
+        run: |
+          tar -zcvf web.tar.gz build/web
+          tar -zcvf linux.tar.gz build/linux/x64/release/bundle
+          tar -zcvf android-apk.tar.gz app/outputs/apk/release/app-release.apk
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: release-artifacts
           path: |
-            build/app
-            build/web
-            build/linux
+            web.tar.gz
+            linux.tar.gz
+            android-apk.tar.gz
 
   build-and-release-on-macos:
     runs-on: macos-latest
@@ -77,7 +82,7 @@ jobs:
         run: flutter build macos
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: release-artifacts
           path: |
@@ -94,33 +99,32 @@ jobs:
       - run: flutter build windows
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: release-artifacts
           path: |
             build/windows/x64/runner/Release
 
   release:
-    needs:
-      [
+    needs: [
         build-and-release-on-ubuntu,
-        build-and-release-on-windows,
-        build-and-release-on-macos,
+        # build-and-release-on-windows,
+        # build-and-release-on-macos,
       ]
     runs-on: ubuntu-latest
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: release-artifacts
 
-      - name: pack into tar.gz or zip
-        run: |
-          tar -zcvf web.tar.gz web
-          tar -zcvf linux.tar.gz linux
-          tar -zcvf android.tar.gz app
-          tar -zcvf windows.tar.gz Release
+      # - name: pack into tar.gz or zip
+      #   run: |
+      #     tar -zcvf web.tar.gz web
+      #     tar -zcvf linux.tar.gz linux
+      #     tar -zcvf android.tar.gz app
+      #     tar -zcvf windows.tar.gz Release
 
       - name: Create release
         uses: softprops/action-gh-release@v1
