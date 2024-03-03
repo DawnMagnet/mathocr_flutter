@@ -51,9 +51,10 @@ jobs:
         with:
           name: release-artifacts
           path: |
-            build/app/outputs/flutter-apk/*
-            build/web/*
-            build/linux/x64/release/bundle/*
+            build/app/outputs/apk/*.apk
+            build/app/outputs/flutter-apk/*.apk
+            build/web
+            build/linux
 
   build-and-release-on-macos:
     runs-on: macos-latest
@@ -115,6 +116,11 @@ jobs:
         with:
           name: release-artifacts
 
+      - name: pack into tar.gz or zip
+        run: |
+          tar -zcvf web.tar.gz web
+          tar -zcvf linux.tar.gz linux
+
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -125,9 +131,8 @@ jobs:
           files: |
             *.apk
             *.exe
-            *.Runner.app
-            web
-            bundle
+            Runner.app
+            *.tar.gz
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
