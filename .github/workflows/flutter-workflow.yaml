@@ -129,10 +129,11 @@ jobs:
             build/windows/x64/runner/Release/windows.zip
 
   release:
-    needs: [
+    needs:
+      [
         build-and-release-on-ubuntu,
-        # build-and-release-on-windows,
-        # build-and-release-on-macos,
+        build-and-release-on-windows,
+        build-and-release-on-macos,
       ]
     runs-on: ubuntu-latest
 
@@ -149,7 +150,7 @@ jobs:
 
       - name: Create release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             *.tar.gz
