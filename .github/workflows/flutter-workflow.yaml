@@ -114,12 +114,19 @@ jobs:
 
       - run: flutter build windows
 
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          filename: windows.zip
+          directory: build/windows/x64/runner/Release
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-artifacts
           path: |
-            build/windows/x64/runner/Release
+            build/windows/x64/runner/Release/windows.zip
 
   release:
     needs: [
