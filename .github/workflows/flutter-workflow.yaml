@@ -55,7 +55,7 @@ jobs:
         run: |
           tar -zcvf web.tar.gz build/web
           tar -zcvf linux.tar.gz build/linux/x64/release/bundle
-          tar -zcvf android-apk.tar.gz app/outputs/apk/release/app-release.apk
+          tar -zcvf android-apk.tar.gz build/app/outputs/apk/release/app-release.apk
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
