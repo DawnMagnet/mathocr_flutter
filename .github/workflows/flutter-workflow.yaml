@@ -59,7 +59,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifacts
+          name: release-artifacts-ubuntu
           path: |
             web.tar.gz
             linux.tar.gz
@@ -94,7 +94,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifacts
+          name: release-artifacts-macos
           path: |
             build/ios/iphoneos/Runner.app
             build/macos/Build/Products/Release/Runner.app
@@ -124,7 +124,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifacts
+          name: release-artifacts-windows
           path: |
             build/windows/x64/runner/Release/windows.zip
 
@@ -139,8 +139,6 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
-        with:
-          name: release-artifacts
 
       # - name: pack into tar.gz or zip
       #   run: |
