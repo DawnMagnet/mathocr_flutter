@@ -101,7 +101,12 @@ jobs:
             build/windows/x64/runner/Release/*.exe
 
   release:
-    needs: build-and-release-on-ubuntu build-and-release-on-windows build-and-release-on-macos
+    needs:
+      [
+        build-and-release-on-ubuntu,
+        build-and-release-on-windows,
+        build-and-release-on-macos,
+      ]
     runs-on: ubuntu-latest
 
     steps:
