@@ -55,31 +55,6 @@ jobs:
             build/web/*
             build/linux/x64/release/bundle/*
 
-  release-on-ubuntu:
-    needs: build-and-release-on-ubuntu
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: release-artifacts
-
-      - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Development Build"
-          files: |
-            build/app/outputs/flutter-apk/*.apk
-            build/web
-            build/linux/x64/release/bundle
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build-and-release-on-macos:
     runs-on: macos-latest
 
@@ -109,52 +84,6 @@ jobs:
             build/ios/iphoneos/Runner.app
             build/macos/Build/Products/Release/Runner.app
 
-  release-on-macos:
-    needs: build-and-release-on-macos
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: release-artifacts
-
-      - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Development Build"
-          files: |
-            build/ios/iphoneos/Runner.app
-            build/macos/Build/Products/Release/Runner.app
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  release-on-windows:
-    needs: build-and-release-on-windows
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: release-artifacts
-
-      - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Development Build"
-          files: |
-            build/windows/x64/runner/Release
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build-and-release-on-windows:
     runs-on: windows-latest
     steps:
@@ -170,3 +99,30 @@ jobs:
           name: release-artifacts
           path: |
             build/windows/x64/runner/Release/*.exe
+
+  release:
+    needs: build-and-release-on-ubuntu build-and-release-on-windows build-and-release-on-macos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: release-artifacts
+
+      - name: Create release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: |
+            *.apk
+            *.exe
+            *.Runner.app
+            web
+            bundle
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
