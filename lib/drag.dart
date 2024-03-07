@@ -77,12 +77,8 @@ class _DragZoneState extends State<DragZone> {
           height: height * 0.4,
           width: width * 0.9,
           decoration: BoxDecoration(
-//背景
             color: const Color.fromRGBO(255, 255, 255, 150),
-
-            //设置四周圆角 角度
             borderRadius: const BorderRadius.all(Radius.circular(40.0)),
-            //设置四周边框
             border: Border.all(
               width: 8,
               color: _dragging
@@ -90,7 +86,6 @@ class _DragZoneState extends State<DragZone> {
                   : Colors.grey,
             ),
           ),
-          // color: _dragging ? Colors.blue.withOpacity(0.4) : Colors.black26,
           child: Center(
               child: Text(
             _dragging ? "松开鼠标以上传文件" : "将你的文件拖拽或者点击此处上传",
