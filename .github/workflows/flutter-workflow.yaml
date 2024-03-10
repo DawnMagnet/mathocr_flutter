@@ -38,7 +38,7 @@ jobs:
       - name: Build Android APK
         run: flutter build apk
 
-      - name: Build web app
+      - name: Build web app with html renderer
         run: flutter build web --web-renderer html
 
       - name: Build Linux app
