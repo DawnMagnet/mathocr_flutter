@@ -39,7 +39,7 @@ jobs:
         run: flutter build apk
 
       - name: Build web app
-        run: flutter build web
+        run: flutter build web --web-renderer html
 
       - name: Build Linux app
         run: flutter build linux
