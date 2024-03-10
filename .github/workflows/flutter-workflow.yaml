@@ -52,9 +52,20 @@ jobs:
 
       - name: pack into tar.gz or zip
         run: |
-          tar -zcvf web.tar.gz -C build/web ./*
-          tar -zcvf linux.tar.gz -C build/linux/x64/release/bundle ./*
-          tar -zcvf android-apk.tar.gz -C build/app/outputs/apk/release ./app-release.apk
+          cd build/web
+          tar -zcvf web.tar.gz ./*
+          cd ../..
+          mv build/web/web.tar.gz .
+
+          cd build/linux/x64/release/bundle
+          tar -zcvf linux.tar.gz ./*
+          cd ../../../../..
+          mv build/linux/x64/release/bundle/linux.tar.gz .
+
+          cd build/app/outputs/apk/release
+          tar -zcvf android-apk.tar.gz ./app-release.apk
+          cd ../../../../..
+          mv build/app/outputs/apk/release/android-apk.tar.gz .
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
