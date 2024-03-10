@@ -8,13 +8,13 @@ class Head extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final height = size.height;
+    // final height = size.height;
     final width = size.width;
     var buttonlist = <Widget>[];
     var urllist = [
-      ("https://www.baidu.com", "文档"),
-      ("https://www.baidu.com", "应用下载"),
-      ("https://www.baidu.com", "快速教程")
+      ("https://github.com/dawnmagnet/mathocr_flutter", "文档"),
+      ("https://github.com/DawnMagnet/mathocr_flutter/releases", "应用下载"),
+      ("https://github.com/dawnmagnet/mathocr_flutter", "快速教程")
     ];
     for (var i = 0; i < urllist.length; i++) {
       buttonlist.add(
